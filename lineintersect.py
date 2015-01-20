@@ -6,7 +6,6 @@
 ##
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 def doBoundingBoxesIntersect(a, b, c, d):
     '''
@@ -63,20 +62,6 @@ def doLinesIntersect(a,b,c,d):
     return doBoundingBoxesIntersect(a,b,c,d) and \
            lineSegmentTouchesOrCrossesLine(a,b,c,d) and \
            lineSegmentTouchesOrCrossesLine(c,d,a,b)
-
-
-# plot
-
-def plotPoints(A,B,C,D):
-    ABx = (A[0],B[0])
-    ABy = (A[1],B[1])
-    CDx = (C[0],D[0])
-    CDy = (C[1],D[1])
-    plt.plot(ABx,ABy)
-    plt.plot(CDx,CDy)
-    plt.show()
-
-
 
 
 ##############################
