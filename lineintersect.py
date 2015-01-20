@@ -87,6 +87,48 @@ def test_isPointRightOfLine():
     A=(1,1); B=(3,3); C=(1,2)
     assert isPointRightOfLine(A,B,C) == False
 
+# a lot of testcases to be tested with the final function
+
+def tcase(name):
+    if name == 'F1':
+        return (0,0), (7,7), (3,4), (4,5), False
+    elif name == 'F2':
+        return (-4,4), (-2,1), (-2,3), (0,0), False
+    elif name == 'F3':
+        return (0,0), (0,1), (2,2), (2,3), False
+    elif name == 'F4':
+        return (0,0), (0,1), (2,2), (3,2), False
+    elif name == 'F5':
+        return (-1,-1), (2,2), (3,3), (5,5), False
+    elif name == 'F6':
+        return (0,0), (1,1), (2,0), (0.5,2), False
+    elif name == 'F7':
+        return (1,1), (4,1), (2,2), (3,2), False
+    elif name == 'F8':
+        return (0,5), (6,0), (2,1), (2,2), False
+    elif name == 'T1':
+        return (0,-2), (0,2), (-2,0), (2,0), True
+    elif name == 'T2':
+        return (5,5), (0,0), (1,1), (8,2), True
+    elif name == 'T3':
+        return (-1,0), (0,0), (-1,-1), (-1,1), True
+    elif name == 'T4':
+        return (0,2), (2,2), (2,0), (2,4), True
+    elif name == 'T5':
+        return (0,0), (5,5), (1,1), (3,3), True
+    elif name == 'T6':
+        return (0,0), (3,3), (0,0), (3,3), True
+
+cases = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
+         'T1', 'T2', 'T3', 'T4', 'T5', 'T6']
+
+def check_intersection(name):
+    A,B,C,D, result = tcase(name)
+    assert doLinesIntersect(A,B,C,D) == result
+
+def test_doLinesIntersect():
+    for case in cases:
+        yield check_intersection, case
 
 
 
