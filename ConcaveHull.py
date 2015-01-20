@@ -121,9 +121,9 @@ prevPoint = (currentPoint[0]+1, currentPoint[1])
 step = 2
 
 while ( (not np.array_equal(firstpoint, currentPoint) or (step==2)) and points.size > 0 ):
-    print currentPoint
-    print points
-    print "---"
+    #print currentPoint
+    #print points
+    #print "---"
     if ( step == 5 ): # we're far enough to close too early
         points = np.append(points, [firstpoint], axis=0)
     kNearestPoints = GetNearestNeighbors(points, currentPoint, k)
