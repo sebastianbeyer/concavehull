@@ -33,7 +33,7 @@ def isPointOnLine(a,b,c):
     bTmp = (b[0] - a[0], b[1] - a[1])
     cTmp = (c[0] - a[0], c[1] - a[1])
     r = np.cross(bTmp, cTmp)
-    return np.abs(r) < 0.000001
+    return np.abs(r) < 0.0000000001
 
 def isPointRightOfLine(a,b,c):
     '''
@@ -53,7 +53,7 @@ def lineSegmentTouchesOrCrossesLine(a,b,c,d):
     '''
     return isPointOnLine(a,b,c) or \
            isPointOnLine(a,b,d) or \
-          (isPointRightOfLine(a,b,c) and
+          (isPointRightOfLine(a,b,c) ^
            isPointRightOfLine(a,b,d))
 
 def doLinesIntersect(a,b,c,d):
@@ -139,8 +139,6 @@ def tcase(name):
 cases = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
          'T1', 'T2', 'T3', 'T4', 'T5', 'T6']
 
-#cases = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6']
-
 def check_intersection(name):
     A,B,C,D, result = tcase(name)
     assert doLinesIntersect(A,B,C,D) == result
@@ -148,10 +146,4 @@ def check_intersection(name):
 def test_doLinesIntersect():
     for case in cases:
         yield check_intersection, case
-
-
-for case in cases:
-    A,B,C,D, result = tcase(case)
-    #print doLinesIntersect(A,B,C,D)
-    print case, doBoundingBoxesIntersect(A,B,C,D)
 
