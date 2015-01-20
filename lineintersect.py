@@ -6,6 +6,7 @@
 ##
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def doBoundingBoxesIntersect(a, b, c, d):
     '''
@@ -13,10 +14,15 @@ def doBoundingBoxesIntersect(a, b, c, d):
     the other, they do intersect.
     First segment is of points a and b, second of c and d.
     '''
-    return a[0] <= d[0] and \
-           b[0] >= c[0] and \
-           a[1] <= d[1] and \
-           b[1] >= c[1]
+    ll1_x = min(a[0],b[0]); ll2_x = min(c[0],d[0])
+    ll1_y = min(a[1],b[1]); ll2_y = min(c[1],d[1])
+    ur1_x = max(a[0],b[0]); ur2_x = max(c[0],d[0])
+    ur1_y = max(a[1],b[1]); ur2_y = max(c[1],d[1])
+
+    return ll1_x <= ur2_x and \
+           ur1_x >= ll2_x and \
+           ll1_y <= ur2_y and \
+           ur1_y >= ll2_y
 
 def isPointOnLine(a,b,c):
     '''
@@ -58,6 +64,17 @@ def doLinesIntersect(a,b,c,d):
            lineSegmentTouchesOrCrossesLine(a,b,c,d) and \
            lineSegmentTouchesOrCrossesLine(c,d,a,b)
 
+
+# plot
+
+def plotPoints(A,B,C,D):
+    ABx = (A[0],B[0])
+    ABy = (A[1],B[1])
+    CDx = (C[0],D[0])
+    CDy = (C[1],D[1])
+    plt.plot(ABx,ABy)
+    plt.plot(CDx,CDy)
+    plt.show()
 
 
 
@@ -122,6 +139,8 @@ def tcase(name):
 cases = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
          'T1', 'T2', 'T3', 'T4', 'T5', 'T6']
 
+#cases = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6']
+
 def check_intersection(name):
     A,B,C,D, result = tcase(name)
     assert doLinesIntersect(A,B,C,D) == result
@@ -131,4 +150,8 @@ def test_doLinesIntersect():
         yield check_intersection, case
 
 
+for case in cases:
+    A,B,C,D, result = tcase(case)
+    #print doLinesIntersect(A,B,C,D)
+    print case, doBoundingBoxesIntersect(A,B,C,D)
 
