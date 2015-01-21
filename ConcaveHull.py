@@ -11,6 +11,7 @@
 import numpy as np
 import scipy.spatial as spt
 import matplotlib.pyplot as plt
+import lineintersect as li
 
 def GetFirstPoint(dataset):
     ''' Returns index of first point, which has the lowest y value '''
@@ -52,6 +53,7 @@ def plotPoints(dataset):
 
 def plotPath(dataset, path):
     plt.plot(dataset[:,0],dataset[:,1],'o')
+    path = np.asarray(path)
     plt.plot(path[:,0],path[:,1],'-')
     plt.show()
 
@@ -62,7 +64,7 @@ def removePoint(dataset, point):
 
 
 
-k = 3
+k = 5
 assert k >= 3, 'k has to be greater or equal to 3.'
 
 
@@ -128,7 +130,29 @@ while ( (not np.array_equal(firstpoint, currentPoint) or (step==2)) and points.s
         points = np.append(points, [firstpoint], axis=0)
     kNearestPoints = GetNearestNeighbors(points, currentPoint, k)
     cPoints = SortByAngle(kNearestPoints, currentPoint, prevPoint)
-    currentPoint = cPoints[0]
+
+    # avoid intersections: select first candidate that does not intersect any
+    # polygon edge
+    its = True
+    i = 0
+    while ( (its==True) and (i<cPoints.shape[0]) ):
+            i=i+1
+            if ( np.array_equal(cPoints[i-1], firstpoint) ):
+                lastPoint = 1
+            else:
+                lastPoint = 0
+            j = 2
+            its = False
+            while ( (its==False) and (j<np.shape(hull)[0]-lastPoint) ):
+                its = li.doLinesIntersect(hull[step-1-1], cPoints[i-1],
+                        hull[step-1-j-1],hull[step-j-1])
+                j=j+1
+    if ( its==True ):
+        # todo: still intersections: recursive restart with higher k:
+        print "all candidates intersect restart with larger k"
+        exit()
+
+    currentPoint = cPoints[i-1]
     # add current point to hull
     hull.append(currentPoint)
     prevPoint = currentPoint
