@@ -49,12 +49,18 @@ def SortByAngle(kNearestPoints, currentPoint, prevPoint):
 
 def plotPoints(dataset):
     plt.plot(dataset[:,0],dataset[:,1],'o')
+    plt.axis('equal')
+    plt.axis([min(dataset[:,0])-0.5,max(dataset[:,0])+0.5,min(dataset[:,1])-0.5,
+        max(dataset[:,1])+0.5])
     plt.show()
 
 def plotPath(dataset, path):
     plt.plot(dataset[:,0],dataset[:,1],'o')
     path = np.asarray(path)
     plt.plot(path[:,0],path[:,1],'-')
+    plt.axis('equal')
+    plt.axis([min(dataset[:,0])-0.5,max(dataset[:,0])+0.5,min(dataset[:,1])-0.5,
+        max(dataset[:,1])+0.5])
     plt.show()
 
 def removePoint(dataset, point):
@@ -69,26 +75,16 @@ assert k >= 3, 'k has to be greater or equal to 3.'
 
 
 # test dataset
-points = np.array([[10,  9],
-                   [ 9, 18],
-                   [16, 13],
-                   [11, 15],
-                   [12, 14],
-                   [18, 12],
-                   [ 2, 14],
-                   [ 6, 18],
-                   [ 9,  9],
-                   [10,  8],
-                   [ 6, 17],
-                   [ 5,  3],
-                   [13, 19],
-                   [ 3, 18],
-                   [ 8, 17],
-                   [ 9,  7],
-                   [ 3,  0],
-                   [13, 18],
-                   [15,  4],
-                   [13, 16]])
+points = np.array([[10,  9], [ 9, 18], [16, 13], [11, 15], [12, 14], [18, 12],
+                   [ 2, 14], [ 6, 18], [ 9,  9], [10,  8], [ 6, 17], [ 5,  3],
+                   [13, 19], [ 3, 18], [ 8, 17], [ 9,  7], [ 3,  0], [13, 18],
+                   [15,  4], [13, 16]])
+
+# add some noise
+noise = np.random.normal(0,0.5,points.size)
+noise = noise.reshape(points.shape)
+points = points+noise
+
 
 # test
 #points = np.array([[ 5,  1],
@@ -182,14 +178,13 @@ def concaveHull(points, k):
         prevPoint = currentPoint
         points = removePoint(points,currentPoint)
         step = step+1
-    print "finnished with k = ",k
+    print "finished with k = ",k
     return hull
 
 
 ############################################################
 ## tests
 ############################################################
-
 
 nx = 5
 ny = nx
@@ -201,14 +196,6 @@ for i in x:
         tpointsy.append((0,i))
 tpoints = np.asarray(tpoints)
 tpointsy = np.asarray(tpointsy)
-
-tpoints2d = []
-x,y = np.meshgrid(np.arange(nx),np.arange(ny))
-for i in np.arange(nx):
-    for j in np.arange(ny):
-        tpoints2d.append((i,j))
-tpoints2d = np.asarray(tpoints2d)
-
 
 
 def test_GetNearestNeighbors_1d_x_00():
@@ -224,6 +211,21 @@ def test_GetNearestNeighbors_1d_y_00():
 def test_GetNearestNeighbors_1d_y_nx():
     neighbors = GetNearestNeighbors(tpointsy, (nx,nx),nx)
     assert np.array_equal(neighbors,tpointsy[::-1])
+
+
+
+tpoints2d = []
+x,y = np.meshgrid(np.arange(nx),np.arange(ny))
+for i in np.arange(nx):
+    for j in np.arange(ny):
+        tpoints2d.append((i,j))
+tpoints2d = np.asarray(tpoints2d)
+
+
+################################################
+
+clock = np.array([[3,2], [4,2], [4,3], [4,4], [3,4], [2,4], [2,3], [2,2]])
+
 
 
 
