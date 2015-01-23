@@ -64,7 +64,7 @@ def removePoint(dataset, point):
 
 
 
-k = 5
+k = 10
 assert k >= 3, 'k has to be greater or equal to 3.'
 
 
@@ -99,70 +99,131 @@ points = np.array([[10,  9],
 #                   [ 4,  4],
 #                   [ 3,  3],
 #                   [ 4,  2]])
+
+#points = np.array([[1,0],
+#                   [1,1],
+#                   [1,2],
+#                   [1,3],
+#                   [1,4],
+#                   [1,5],
+#                   [2,1],
+#                   [2,2],
+#                   [2,3],
+#                   [2,4],
+#                   [2,5],
+#                   [3,1],
+#                   [3,2],
+#                   [3,3],
+#                   [3,4],
+#                   [3,5]])
+
+
 points2 = points
 
 points = points[::-1]
+def concaveHull(points, k):
+    # todo: remove duplicate points from dataset
+    # todo: check if dataset consists of only 3 or less points
+    # todo: make sure that enough points for a given k can be found
 
-# todo: remove duplicate points from dataset
-# todo: check if dataset consists of only 3 or less points
-# todo: make sure that enough points for a given k can be found
+    firstpoint = GetFirstPoint(points)
+    # init hull as list to easily append stuff
+    hull = []
 
-firstpoint = GetFirstPoint(points)
+    # add first point to hull
+    hull.append(firstpoint)
+    # and remove it from dataset
+    points = removePoint(points,firstpoint)
 
-# init hull as list to easily append stuff
-hull = []
+    currentPoint = firstpoint
+    # set prevPoint to a Point directly right of currentpoint (angle=0)
+    prevPoint = (currentPoint[0]+10, currentPoint[1])
+    step = 2
 
-# add first point to hull
-hull.append(firstpoint)
-# and remove it from dataset
-points = removePoint(points,firstpoint)
+    while ( (not np.array_equal(firstpoint, currentPoint) or (step==2)) and points.size > 0 ):
+        print currentPoint
+        #print points
+        #print "---"
+        if ( step == 5 ): # we're far enough to close too early
+            points = np.append(points, [firstpoint], axis=0)
+        kNearestPoints = GetNearestNeighbors(points, currentPoint, k)
+        cPoints = SortByAngle(kNearestPoints, currentPoint, prevPoint)
+        # invert test
+        #cPoints = cPoints[::-1]
+        print cPoints
 
-currentPoint = firstpoint
-# set prevPoint to a Point directly right of currentpoint (angle=0)
-prevPoint = (currentPoint[0]+1, currentPoint[1])
-step = 2
+        # avoid intersections: select first candidate that does not intersect any
+        # polygon edge
+        its = True
+        i = 0
+        while ( (its==True) and (i<cPoints.shape[0]) ):
+                i=i+1
+                if ( np.array_equal(cPoints[i-1], firstpoint) ):
+                    lastPoint = 1
+                else:
+                    lastPoint = 0
+                j = 2
+                its = False
+                while ( (its==False) and (j<np.shape(hull)[0]-lastPoint) ):
+                    its = li.doLinesIntersect(hull[step-1-1], cPoints[i-1],
+                            hull[step-1-j-1],hull[step-j-1])
+                    j=j+1
+        if ( its==True ):
+            # todo: still intersections: recursive restart with higher k:
+            print "all candidates intersect restart with larger k"
+            #concaveHull(points2,k+1)
 
-while ( (not np.array_equal(firstpoint, currentPoint) or (step==2)) and points.size > 0 ):
-    #print currentPoint
-    #print points
-    #print "---"
-    if ( step == 5 ): # we're far enough to close too early
-        points = np.append(points, [firstpoint], axis=0)
-    kNearestPoints = GetNearestNeighbors(points, currentPoint, k)
-    cPoints = SortByAngle(kNearestPoints, currentPoint, prevPoint)
+            #exit()
 
-    # avoid intersections: select first candidate that does not intersect any
-    # polygon edge
-    its = True
-    i = 0
-    while ( (its==True) and (i<cPoints.shape[0]) ):
-            i=i+1
-            if ( np.array_equal(cPoints[i-1], firstpoint) ):
-                lastPoint = 1
-            else:
-                lastPoint = 0
-            j = 2
-            its = False
-            while ( (its==False) and (j<np.shape(hull)[0]-lastPoint) ):
-                its = li.doLinesIntersect(hull[step-1-1], cPoints[i-1],
-                        hull[step-1-j-1],hull[step-j-1])
-                j=j+1
-    if ( its==True ):
-        # todo: still intersections: recursive restart with higher k:
-        print "all candidates intersect restart with larger k"
-        exit()
-
-    currentPoint = cPoints[i-1]
-    # add current point to hull
-    hull.append(currentPoint)
-    prevPoint = currentPoint
-    points = removePoint(points,currentPoint)
-    step = step+1
-
-
+        currentPoint = cPoints[i-1]
+        #currentPoint = cPoints[0]
+        # add current point to hull
+        hull.append(currentPoint)
+        prevPoint = currentPoint
+        points = removePoint(points,currentPoint)
+        step = step+1
+    print "finnished with k = ",k
+    return hull
 
 
+############################################################
+## tests
+############################################################
 
+
+nx = 5
+ny = nx
+tpoints = []
+tpointsy = []
+x = np.arange(nx)
+for i in x:
+        tpoints.append((i,0))
+        tpointsy.append((0,i))
+tpoints = np.asarray(tpoints)
+tpointsy = np.asarray(tpointsy)
+
+tpoints2d = []
+x,y = np.meshgrid(np.arange(nx),np.arange(ny))
+for i in np.arange(nx):
+    for j in np.arange(ny):
+        tpoints2d.append((i,j))
+tpoints2d = np.asarray(tpoints2d)
+
+
+
+def test_GetNearestNeighbors_1d_x_00():
+    neighbors = GetNearestNeighbors(tpoints, (0,0),nx)
+    assert np.array_equal(neighbors,tpoints)
+def test_GetNearestNeighbors_1d_x_nx():
+    neighbors = GetNearestNeighbors(tpoints, (nx,nx),nx)
+    assert np.array_equal(neighbors,tpoints[::-1])
+
+def test_GetNearestNeighbors_1d_y_00():
+    neighbors = GetNearestNeighbors(tpointsy, (0,0),nx)
+    assert np.array_equal(neighbors,tpointsy)
+def test_GetNearestNeighbors_1d_y_nx():
+    neighbors = GetNearestNeighbors(tpointsy, (nx,nx),nx)
+    assert np.array_equal(neighbors,tpointsy[::-1])
 
 
 
