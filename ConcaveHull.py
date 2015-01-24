@@ -184,11 +184,16 @@ points = np.array([[10,  9], [ 9, 18], [16, 13], [11, 15], [12, 14], [18, 12],
                    [13, 19], [ 3, 18], [ 8, 17], [ 9,  7], [ 3,  0], [13, 18],
                    [15,  4], [13, 16]])
 
+points_solution_k_5 = np.array([[5, 1],[6, 2],[7, 3],[6, 4],[5, 5],[4, 4],
+                                [3, 3],[4, 2],[5, 1]])
 
-
+def test_concaveHull_1_k_5():
+    hull = concaveHull(points,5)
+    assert np.array_equal(hull, points_solution_k_5)
 
 
 # add some noise
+
 noise = np.random.normal(0,0.5,points.size)
 noise = noise.reshape(points.shape)
 #points = points+noise
