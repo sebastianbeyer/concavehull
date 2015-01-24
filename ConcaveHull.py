@@ -11,6 +11,7 @@
 import numpy as np
 import scipy.spatial as spt
 import matplotlib.pyplot as plt
+from matplotlib.path import Path
 import lineintersect as li
 
 def GetFirstPoint(dataset):
@@ -69,54 +70,9 @@ def removePoint(dataset, point):
     return newdata
 
 
-
-
-
-# test dataset
-points = np.array([[10,  9], [ 9, 18], [16, 13], [11, 15], [12, 14], [18, 12],
-                   [ 2, 14], [ 6, 18], [ 9,  9], [10,  8], [ 6, 17], [ 5,  3],
-                   [13, 19], [ 3, 18], [ 8, 17], [ 9,  7], [ 3,  0], [13, 18],
-                   [15,  4], [13, 16]])
-
-# add some noise
-noise = np.random.normal(0,0.5,points.size)
-noise = noise.reshape(points.shape)
-#points = points+noise
-
-
-# test
-#points = np.array([[ 5,  1],
-#                   [ 6,  2],
-#                   [ 7,  3],
-#                   [ 6,  4],
-#                   [ 5,  5],
-#                   [ 4,  4],
-#                   [ 3,  3],
-#                   [ 4,  2]])
-
-#points = np.array([[1,0],
-#                   [1,1],
-#                   [1,2],
-#                   [1,3],
-#                   [1,4],
-#                   [1,5],
-#                   [2,1],
-#                   [2,2],
-#                   [2,3],
-#                   [2,4],
-#                   [2,5],
-#                   [3,1],
-#                   [3,2],
-#                   [3,3],
-#                   [3,4],
-#                   [3,5]])
-
-
-points2 = points
-
-points = points[::-1]
-def concaveHull(points, k):
+def concaveHull(dataset, k):
     assert k >= 3, 'k has to be greater or equal to 3.'
+    points = dataset
     # todo: remove duplicate points from dataset
     # todo: check if dataset consists of only 3 or less points
     # todo: make sure that enough points for a given k can be found
@@ -158,7 +114,7 @@ def concaveHull(points, k):
                     j=j+1
         if ( its==True ):
             # todo: still intersections: recursive restart with higher k:
-            print "all candidates intersect restart with larger k"
+            print "all candidates intersect -- restart with larger k"
             #return concaveHull(points2,k+1)
         prevPoint = currentPoint
         currentPoint = cPoints[i-1]
@@ -166,6 +122,12 @@ def concaveHull(points, k):
         hull.append(currentPoint)
         points = removePoint(points,currentPoint)
         step = step+1
+    # check if all points are inside the hull
+    p = Path(hull)
+    pContained = p.contains_points(dataset, radius=0.0000000001)
+    if (not pContained.all()):
+        print "not all points of dataset contained in hull -- restart with larger k"
+
     print "finished with k = ",k
     return hull
 
@@ -215,5 +177,28 @@ def test_SortByAngle_clock():
         yield check_SortByAngle, clock, (3,3), point, i
         i=i+1
 
+################################################
+# test dataset
+points = np.array([[10,  9], [ 9, 18], [16, 13], [11, 15], [12, 14], [18, 12],
+                   [ 2, 14], [ 6, 18], [ 9,  9], [10,  8], [ 6, 17], [ 5,  3],
+                   [13, 19], [ 3, 18], [ 8, 17], [ 9,  7], [ 3,  0], [13, 18],
+                   [15,  4], [13, 16]])
+
+
+
+
+
+# add some noise
+noise = np.random.normal(0,0.5,points.size)
+noise = noise.reshape(points.shape)
+#points = points+noise
+
+
+# test
+points = np.array([[ 5,  1], [ 6,  2], [ 7,  3], [ 6,  4], [ 5,  5], [ 4,  4],
+                   [ 3,  3], [ 4,  2]])
+
+points2 = points
+points = points[::-1]
 
 
