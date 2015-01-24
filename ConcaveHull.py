@@ -70,8 +70,6 @@ def removePoint(dataset, point):
 
 
 
-k = 10
-assert k >= 3, 'k has to be greater or equal to 3.'
 
 
 # test dataset
@@ -118,6 +116,7 @@ points2 = points
 
 points = points[::-1]
 def concaveHull(points, k):
+    assert k >= 3, 'k has to be greater or equal to 3.'
     # todo: remove duplicate points from dataset
     # todo: check if dataset consists of only 3 or less points
     # todo: make sure that enough points for a given k can be found
@@ -137,16 +136,10 @@ def concaveHull(points, k):
     step = 2
 
     while ( (not np.array_equal(firstpoint, currentPoint) or (step==2)) and points.size > 0 ):
-        print currentPoint
-        print prevPoint
-        #print points
-        #print "---"
         if ( step == 5 ): # we're far enough to close too early
             points = np.append(points, [firstpoint], axis=0)
         kNearestPoints = GetNearestNeighbors(points, currentPoint, k)
         cPoints = SortByAngle(kNearestPoints, currentPoint, prevPoint)
-        print cPoints
-
         # avoid intersections: select first candidate that does not intersect any
         # polygon edge
         its = True
@@ -167,12 +160,8 @@ def concaveHull(points, k):
             # todo: still intersections: recursive restart with higher k:
             print "all candidates intersect restart with larger k"
             #return concaveHull(points2,k+1)
-
-            #exit()
-
         prevPoint = currentPoint
         currentPoint = cPoints[i-1]
-        #currentPoint = cPoints[0]
         # add current point to hull
         hull.append(currentPoint)
         points = removePoint(points,currentPoint)
@@ -196,7 +185,6 @@ for i in x:
 tpoints = np.asarray(tpoints)
 tpointsy = np.asarray(tpointsy)
 
-
 def test_GetNearestNeighbors_1d_x_00():
     neighbors = GetNearestNeighbors(tpoints, (0,0),nx)
     assert np.array_equal(neighbors,tpoints)
@@ -212,19 +200,8 @@ def test_GetNearestNeighbors_1d_y_nx():
     assert np.array_equal(neighbors,tpointsy[::-1])
 
 
-
-tpoints2d = []
-x,y = np.meshgrid(np.arange(nx),np.arange(ny))
-for i in np.arange(nx):
-    for j in np.arange(ny):
-        tpoints2d.append((i,j))
-tpoints2d = np.asarray(tpoints2d)
-
-
 ################################################
-
 clock = np.array([[3,2], [4,2], [4,3], [4,4], [3,4], [2,4], [2,3], [2,2]])
-
 
 def check_SortByAngle(points,currentPoint,prevPoint,i):
     sortedPoints = SortByAngle(points,currentPoint,prevPoint)
@@ -237,8 +214,6 @@ def test_SortByAngle_clock():
     for point in clock:
         yield check_SortByAngle, clock, (3,3), point, i
         i=i+1
-
-
 
 
 
