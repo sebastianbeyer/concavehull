@@ -167,7 +167,7 @@ def concaveHull(points, k):
         if ( its==True ):
             # todo: still intersections: recursive restart with higher k:
             print "all candidates intersect restart with larger k"
-            #concaveHull(points2,k+1)
+            return concaveHull(points2,k+1)
 
             #exit()
 
@@ -226,6 +226,18 @@ tpoints2d = np.asarray(tpoints2d)
 
 clock = np.array([[3,2], [4,2], [4,3], [4,4], [3,4], [2,4], [2,3], [2,2]])
 
+
+def check_SortByAngle(points,currentPoint,prevPoint,i):
+    sortedPoints = SortByAngle(points,currentPoint,prevPoint)
+    #for j in np.arange(len(clock)):
+    #    print sortedPoints[j], clock[j], np.roll(clock,-i,axis=0)[j]
+    assert np.array_equal(sortedPoints, np.roll(clock,-i,axis=0))
+
+def test_SortByAngle_clock():
+    i=0
+    for point in clock:
+        yield check_SortByAngle, clock, (3,3), point, i
+        i=i+1
 
 
 
