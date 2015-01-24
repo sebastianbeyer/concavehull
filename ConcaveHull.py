@@ -83,7 +83,7 @@ points = np.array([[10,  9], [ 9, 18], [16, 13], [11, 15], [12, 14], [18, 12],
 # add some noise
 noise = np.random.normal(0,0.5,points.size)
 noise = noise.reshape(points.shape)
-points = points+noise
+#points = points+noise
 
 
 # test
@@ -132,20 +132,19 @@ def concaveHull(points, k):
     points = removePoint(points,firstpoint)
 
     currentPoint = firstpoint
-    # set prevPoint to a Point directly right of currentpoint (angle=0)
+    # set prevPoint to a Point directly below currentpoint (angle=0)
     prevPoint = (currentPoint[0]+10, currentPoint[1])
     step = 2
 
     while ( (not np.array_equal(firstpoint, currentPoint) or (step==2)) and points.size > 0 ):
         print currentPoint
+        print prevPoint
         #print points
         #print "---"
         if ( step == 5 ): # we're far enough to close too early
             points = np.append(points, [firstpoint], axis=0)
         kNearestPoints = GetNearestNeighbors(points, currentPoint, k)
         cPoints = SortByAngle(kNearestPoints, currentPoint, prevPoint)
-        # invert test
-        #cPoints = cPoints[::-1]
         print cPoints
 
         # avoid intersections: select first candidate that does not intersect any
@@ -167,15 +166,15 @@ def concaveHull(points, k):
         if ( its==True ):
             # todo: still intersections: recursive restart with higher k:
             print "all candidates intersect restart with larger k"
-            return concaveHull(points2,k+1)
+            #return concaveHull(points2,k+1)
 
             #exit()
 
+        prevPoint = currentPoint
         currentPoint = cPoints[i-1]
         #currentPoint = cPoints[0]
         # add current point to hull
         hull.append(currentPoint)
-        prevPoint = currentPoint
         points = removePoint(points,currentPoint)
         step = step+1
     print "finished with k = ",k
