@@ -57,13 +57,17 @@ def plotPoints(dataset):
     plt.show()
 
 def plotPath(dataset, path):
-    plt.plot(dataset[:,0],dataset[:,1],'o',markersize=10,markerfacecolor='0.75',
+    plt.plot(dataset[:,0],dataset[:,1],'o',markersize=10,markerfacecolor='0.65',
             markeredgewidth=0)
     path = np.asarray(path)
+    plt.plot(path[:,0],path[:,1],'o',markersize=10,markerfacecolor='0.55',
+            markeredgewidth=0)
     plt.plot(path[:,0],path[:,1],'-',lw=1.4,color='k')
     plt.axis('equal')
     plt.axis([min(dataset[:,0])-0.5,max(dataset[:,0])+0.5,min(dataset[:,1])-0.5,
         max(dataset[:,1])+0.5])
+    plt.axis('off')
+    plt.savefig('./doc/figure_1.png', bbox_inches='tight')
     plt.show()
 
 def removePoint(dataset, point):
