@@ -114,8 +114,7 @@ def concaveHull(dataset, k):
                     j=j+1
         if ( its==True ):
             # todo: still intersections: recursive restart with higher k:
-            print "all candidates intersect -- restart with larger k"
-            print "restarting with k = ",k+1
+            print "all candidates intersect -- restarting with k = ",k+1
             return concaveHull(dataset,k+1)
         prevPoint = currentPoint
         currentPoint = cPoints[i-1]
@@ -191,8 +190,6 @@ points_solution_k_5 = np.array([[3, 0],[10,  8],[15,  4],[18, 12],[13, 18],[13, 
 def test_concaveHull_1_k_5():
     hull = concaveHull(points,5)
     assert np.array_equal(hull, points_solution_k_5)
-
-
 
 
 # points to test what happens if all points intersect
