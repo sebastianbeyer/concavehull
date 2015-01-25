@@ -180,34 +180,34 @@ def test_SortByAngle_clock():
         i=i+1
 
 ################################################
-# test dataset
+# simple test dataset
 points = np.array([[10,  9], [ 9, 18], [16, 13], [11, 15], [12, 14], [18, 12],
                    [ 2, 14], [ 6, 18], [ 9,  9], [10,  8], [ 6, 17], [ 5,  3],
                    [13, 19], [ 3, 18], [ 8, 17], [ 9,  7], [ 3,  0], [13, 18],
                    [15,  4], [13, 16]])
-
 points_solution_k_5 = np.array([[3, 0],[10,  8],[15,  4],[18, 12],[13, 18],[13, 19],
                                [ 9, 18],[6, 18],[3, 18],[2, 14],[9, 9],[5, 3],[3, 0]
                                ])
-
-
 def test_concaveHull_1_k_5():
     hull = concaveHull(points,5)
     assert np.array_equal(hull, points_solution_k_5)
 
 
-# add some noise
-
-noise = np.random.normal(0,0.5,points.size)
-noise = noise.reshape(points.shape)
-#points = points+noise
 
 
-# test
-#points = np.array([[ 5,  1], [ 6,  2], [ 7,  3], [ 6,  4], [ 5,  5], [ 4,  4],
-#                   [ 3,  3], [ 4,  2]])
+# points to test what happens if all points intersect
+points_intersect = np.array([[1,1],[10,3],[11,8],[9,14],[15,21],[-5,15],[-3,10],
+                            [2,5],    # from here the distracting points
+                            [9,10],[8,9],[8,11],[8,12],[9,11],[9,12]
+                            ])
+points_intersect_solution = np.array([[1, 1],[10,  3],[11,  8],[9, 14],[15, 21],
+                                     [-5, 15],[-3, 10],[1, 1]
+                                     ])
+def test_concaveHull_intersect():
+    hull = concaveHull(points_intersect, 5)
+    assert np.array_equal(hull, points_intersect_solution)
 
-points2 = points
+
 
 points_E = np.array([[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[6,2],[6,3],[5,3],[4,3],
                     [3,3],[3,4],[3,5],[4,5],[5,5],[5,6],[5,7],[4,7],[3,7],[3,8],
@@ -216,26 +216,5 @@ points_E = np.array([[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[6,2],[6,3],[5,3],[4,3]
                     [5,2],[4,2],[3,2],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],
                     [2,9],[2,10],[3,10],[4,10],[5,10],[3,6],[4,6],[5,6],[4.5,7],[3,8.5],
                     ])
-
-
-# points to test what happens if all points intersect
-points_intersect = np.array([
-                            [1,1],
-                            [10,3],
-                            [11,8],
-                            [9,14],
-                            [15,21],
-                            [-5,15],
-                            [-3,10],
-                            [2,5],    # from here the distracting points
-                            [9,10],
-                            [8,9],
-                            [8,11],
-                            [8,12],
-                            [9,11],
-                            [9,12]
-                            ])
-
-
 
 
