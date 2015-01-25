@@ -7,7 +7,7 @@ hull.
 
 This is based on the works of Moreira and Santos 2007.
 
-[![example](./doc/figure_1.png)
+![example](./doc/figure_1.png)
 
 
 
