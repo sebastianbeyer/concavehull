@@ -126,8 +126,8 @@ def concaveHull(dataset, k):
     p = Path(hull)
     pContained = p.contains_points(dataset, radius=0.0000000001)
     if (not pContained.all()):
-        print "not all points of dataset contained in hull -- restart with larger k"
-        #return concaveHull(dataset, k+1)
+        print "not all points of dataset contained in hull -- restarting with k = ",k+1
+        return concaveHull(dataset, k+1)
 
     print "finished with k = ",k
     return hull
@@ -189,6 +189,12 @@ points_solution_k_5 = np.array([[3, 0],[10,  8],[15,  4],[18, 12],[13, 18],[13, 
                                ])
 def test_concaveHull_1_k_5():
     hull = concaveHull(points,5)
+    assert np.array_equal(hull, points_solution_k_5)
+
+def test_concaveHull_1_k_3():
+    # this tests, if missed point (too far away) is detected and if the
+    # function is started again with increased k
+    hull = concaveHull(points,3)
     assert np.array_equal(hull, points_solution_k_5)
 
 
