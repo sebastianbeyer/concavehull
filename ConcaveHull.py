@@ -115,7 +115,8 @@ def concaveHull(dataset, k):
         if ( its==True ):
             # todo: still intersections: recursive restart with higher k:
             print "all candidates intersect -- restart with larger k"
-            #return concaveHull(points2,k+1)
+            print "restarting with k = ",k+1
+            return concaveHull(dataset,k+1)
         prevPoint = currentPoint
         currentPoint = cPoints[i-1]
         # add current point to hull
@@ -127,6 +128,7 @@ def concaveHull(dataset, k):
     pContained = p.contains_points(dataset, radius=0.0000000001)
     if (not pContained.all()):
         print "not all points of dataset contained in hull -- restart with larger k"
+        #return concaveHull(dataset, k+1)
 
     print "finished with k = ",k
     return hull
@@ -200,10 +202,38 @@ noise = noise.reshape(points.shape)
 
 
 # test
-points = np.array([[ 5,  1], [ 6,  2], [ 7,  3], [ 6,  4], [ 5,  5], [ 4,  4],
-                   [ 3,  3], [ 4,  2]])
+#points = np.array([[ 5,  1], [ 6,  2], [ 7,  3], [ 6,  4], [ 5,  5], [ 4,  4],
+#                   [ 3,  3], [ 4,  2]])
 
 points2 = points
-points = points[::-1]
+
+points_E = np.array([[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[6,2],[6,3],[5,3],[4,3],
+                    [3,3],[3,4],[3,5],[4,5],[5,5],[5,6],[5,7],[4,7],[3,7],[3,8],
+                    [3,9],[4,9],[5,9],[6,9],[6,10],[6,11],[5,11],[4,11],[3,11],[2,11],
+                    [1,11],[1,10],[1,9],[1,8],[1,7],[1,6],[1,5],[1,4],[1,3],[1,2],
+                    [5,2],[4,2],[3,2],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],
+                    [2,9],[2,10],[3,10],[4,10],[5,10],[3,6],[4,6],[5,6],[4.5,7],[3,8.5],
+                    ])
+
+
+# points to test what happens if all points intersect
+points_intersect = np.array([
+                            [1,1],
+                            [10,3],
+                            [11,8],
+                            [9,14],
+                            [15,21],
+                            [-5,15],
+                            [-3,10],
+                            [2,5],    # from here the distracting points
+                            [9,10],
+                            [8,9],
+                            [8,11],
+                            [8,12],
+                            [9,11],
+                            [9,12]
+                            ])
+
+
 
 
