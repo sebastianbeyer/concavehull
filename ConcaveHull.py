@@ -49,16 +49,18 @@ def SortByAngle(kNearestPoints, currentPoint, prevPoint):
     return kNearestPoints[np.argsort(angles)]
 
 def plotPoints(dataset):
-    plt.plot(dataset[:,0],dataset[:,1],'o')
+    plt.plot(dataset[:,0],dataset[:,1],'o',markersize=10,markerfacecolor='0.75',
+            markeredgewidth=1)
     plt.axis('equal')
     plt.axis([min(dataset[:,0])-0.5,max(dataset[:,0])+0.5,min(dataset[:,1])-0.5,
         max(dataset[:,1])+0.5])
     plt.show()
 
 def plotPath(dataset, path):
-    plt.plot(dataset[:,0],dataset[:,1],'o')
+    plt.plot(dataset[:,0],dataset[:,1],'o',markersize=10,markerfacecolor='0.75',
+            markeredgewidth=0)
     path = np.asarray(path)
-    plt.plot(path[:,0],path[:,1],'-')
+    plt.plot(path[:,0],path[:,1],'-',lw=1.4,color='k')
     plt.axis('equal')
     plt.axis([min(dataset[:,0])-0.5,max(dataset[:,0])+0.5,min(dataset[:,1])-0.5,
         max(dataset[:,1])+0.5])
