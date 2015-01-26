@@ -10,9 +10,21 @@ import ConcaveHull as CH
 import timeit
 
 
-n = 1000
+nmax = 10000
 
-data = np.random.randint(0,5*n,size=2*n)
-data = data.reshape(n,2)
+alldata = np.random.randint(0,5*nmax,size=2*nmax)
+alldata = alldata.reshape(nmax,2)
 
 
+times = []
+nrange = np.arange(1000,nmax+1000,1000)
+
+for n in nrange:
+    print "--- n = ",n," ---"
+    data = alldata[:n]
+    time = timeit.timeit("CH.concaveHull(data,20)",setup="import ConcaveHull as CH; \
+                         from __main__ import data",number=1)
+    times.append(time)
+
+plt.plot(nrange,times)
+plt.show()
