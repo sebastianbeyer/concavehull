@@ -39,7 +39,6 @@ def SortByAngle(kNearestPoints, currentPoint, prevPoint):
                 NearestPoint[0]-currentPoint[0]) - \
                 np.arctan2(prevPoint[1]-currentPoint[1],
                 prevPoint[0]-currentPoint[0])
-
         angle = np.rad2deg(angle)
         # only positive angles
         angle = np.mod(angle+360,360)
@@ -86,14 +85,12 @@ def concaveHull(dataset, k):
     firstpoint = GetFirstPoint(points)
     # init hull as list to easily append stuff
     hull = []
-
     # add first point to hull
     hull.append(firstpoint)
     # and remove it from dataset
     points = removePoint(points,firstpoint)
-
     currentPoint = firstpoint
-    # set prevPoint to a Point directly below currentpoint (angle=0)
+    # set prevPoint to a Point righ of currentpoint (angle=0)
     prevPoint = (currentPoint[0]+10, currentPoint[1])
     step = 2
 
@@ -119,7 +116,6 @@ def concaveHull(dataset, k):
                             hull[step-1-j-1],hull[step-j-1])
                     j=j+1
         if ( its==True ):
-            # todo: still intersections: recursive restart with higher k:
             print "all candidates intersect -- restarting with k = ",k+1
             return concaveHull(dataset,k+1)
         prevPoint = currentPoint
