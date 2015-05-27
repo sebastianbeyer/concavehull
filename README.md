@@ -1,5 +1,6 @@
 # concavehull
 [![Build Status](https://travis-ci.org/sebastianbeyer/concavehull.svg?branch=master)](https://travis-ci.org/sebastianbeyer/concavehull)
+[![Code Climate](https://codeclimate.com/github/sebastianbeyer/concavehull/badges/gpa.svg)](https://codeclimate.com/github/sebastianbeyer/concavehull)
 
 Computes the envelope of a set of points, which represents the area occupied by
 this points. A nearest neighbours approach is used to generate a concave or convex
